@@ -636,6 +636,12 @@ Change is fxxking everywhere. You know that.
 
 Design patterns help you avoid this by ensuring that **a ROBUST system can change in specific ways**. 
 
+[Abstract Factory][creational_abstract_factory]
+
+[Decorator][structural_decorator]
+
+[Memento][behavioral_memento]
+
 
 
 :pushpin:**Common Causes of Redesign** :star::star::star:
@@ -12196,6 +12202,6 @@ Design patterns help you avoid this by ensuring that **a ROBUST system can chang
 
 
 
-[creational_md]: #Principle
-[structural_md]: #xxx
-[behavioral_md]: #xxx
+[creational_abstract_factory]: #31-abstract-factory
+[structural_decorator]: #44-decorator
+[behavioral_memento]: #56-memento
