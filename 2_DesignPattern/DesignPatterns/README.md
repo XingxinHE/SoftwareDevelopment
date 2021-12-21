@@ -2,6 +2,22 @@
 
 
 
+
+
+
+
+# 0.Principles of Object-Oriented Design
+
+<div align="center">
+<h3>Program to an interface, not an implementation.</h3>
+<h3>Favor object composition over class inheritance.</h3>
+</div>
+
+
+
+
+
+
 # 1.Introduction
 
 :pushpin:**How does design pattern help?**
@@ -435,94 +451,205 @@ You can only achieve polymorphism by interface.
 
 ### 1.6.4. Specifying Object Implementation
 
-:pushpin:****
+:pushpin:**Diagram of Class and Object**
 
+![image-20211217094458982](img/image-20211217094458982.png)
 
+An object's implementation is defined by its **class**.
 
+Object is said to be an **instance** of the class because they are created by **instantiating** a class.
 
 
 
+:pushpin:**Class Inheritance**
 
-:pushpin:****
+The class inheritance describes a **<u>subclass</u> / <u>derived class</u>** inherits from a **<u>parent class</u> / <u>base class</u>**.
 
+![image-20211217101741383](img/image-20211217101741383.png)
 
 
 
+:pushpin:**Abstract class and Concrete class**
 
+<u>Abstract class</u>: its main purpose is to **define a common interface** for its subclasses. (it does not have to implement all the operations)
 
+<u>Concrete class</u>: the complement of abstract class is concrete class. (the interface must be implemented!)
 
-:pushpin:****
+![image-20211217103137298](img/image-20211217103137298.png)
 
+Therefore, you can implement the operation defined by *abstract class* elsewhere. 
 
 
 
+:pushpin:**Mixin Class**
 
+A **mixin** (or **mix-in**) is a class that contains methods for use by other classes without having to be the parent class of those other classes. 
 
+![image-20211217103912064](img/image-20211217103912064.png)
 
-:pushpin:****
 
 
 
 
+:pushpin:**<u>Class Inheritance</u> VS <u>Interface Inheritance</u>**
 
+Personally, I think the design of C# illustrating these concepts very well.
 
+> ​	**<u>Class inheritance</u>** defines an object's implementation in terms of another object's implementation. In short, it's a mechanism for **code and representation sharing**. 
 
-:pushpin:****
+> ​	<u>**Interface inheritance**</u> (or subtyping) describes when an object can be used in place of another.
 
+//TODO a diagram illustrating this would be better.
 
 
 
+:pushpin:**Program to an interface, not an implementation**:star::star::star:
 
+> ​	This is super IMPORTANT!! PLEASE KEEP IT IN MIND!!!
 
+Don't declare variables to be instances of particular concrete classes. Instead, commit only to an interface defined by an abstract class. 
 
-:pushpin:****
 
 
+> ​	Example of Programming to an interface:heavy_check_mark:
 
+```c++
+//Base class specifying the interface
+class Calculator
+{
+protected:
+	double g_num;
 
+public:
+	virtual double AddOperation(double value);
+};
 
+//Derived class implementing the interface
+class NewCalculator : public Calculator
+{
+public:
+	double AddOperation(double value) override
+	{
+		this->g_num += value;
+	}
+};
 
+//Derived class implementing the interface
+class OldeCalculator : public Calculator
+{
+public:
+	double AddOperation(double value) override
+	{
+		this->g_num += value + value;
+	}
+};
+```
 
-:pushpin:****
 
 
+> ​	Example of Programming to an implementation:x:
 
+```c++
+class Calculator
+{
+private:
+	double g_num;
 
+public:
+	double AddOperation(double value)
+	{
+		this->g_num++;
+	}
+};
+```
 
 
 
-:pushpin:****
+:star:The former one is **BETTER** because **polymorphism** depends on it.
 
 
 
+:pushpin:**Why Design patter can help?**
 
+The <u>**creational patterns**</u> help you in specifying the particular implementation of those interfaces somewhere in your system. They are *Abstract Factory*, *Builder*, *Factory Method*, *Prototype*, and *Singleton*.
 
 
 
-:pushpin:****
+### 1.6.5. Putting Reuse Mechanisms to Work
 
+:pushpin:**Inheritance versus Composition**
 
+In short, you should use *composition* more than *inheritance*!!
 
+> ​	**Inheritance - [White Box]:white_large_square:**
 
+If inherited implementation **not be appropriate** for new problem, the parent class **must be rewritten**!!
 
+> ​	 **Composition - [Black Box]:black_large_square:**
 
+New functionality is obtained by **assembling** or **composing** <u>**objects**</u> to get more complex functionality. Object composition requires that the objects being composed have well-defined interfaces.
 
-:pushpin:****
 
 
+I think **intuitive** understanding is even better than text explanation.
 
+<div align="center">
+<img src="img/diagram_of_composition.svg" style="width:40%" class="center">
+  <figcaption>Diagram of Composition</figcaption>
+    <br></br>
+    <img src="img/diagram_of_inheritance.png" style="width:40%" class="center">
+  <figcaption>Diagram of Inheritance</figcaption>
+</div>
 
+Composition is way more flexible than inheritance.
 
 
 
-:pushpin:****
+
+
+:pushpin:**Aggregation vs. Acquaintance**
+
+|                                               | Aggregation                              | Acquaintance                             |
+| --------------------------------------------- | ---------------------------------------- | ---------------------------------------- |
+| Relationship between objects and owners[DIFF] | close, tight                             | loose, weaker                            |
+| Lifetime[DIFF]                                | have identical lifetimes                 | not responsible for each other           |
+| Intention[DIFF]                               | permanent                                | dynamic                                  |
+| Language Mechanism[COMMON]                    | implemented with pointers and references | implemented with pointers and references |
+
+
+
+:pushpin:**Why Design patter can help?**
+
+Because aggregation and acquaintance are often related to **compile-time** and **run-time**. Therefore, many design patterns (in particular those that have object scope) capture the distinction between compile-time and run-time structures explicitly. 
+
+
+
+### 1.6.6. Designing for Change
+
+:pushpin:**Change**
+
+Change is fxxking everywhere. You know that.
+
+
+
+:pushpin:**Why Design patter can help?**
+
+Design patterns help you avoid this by ensuring that **a ROBUST system can change in specific ways**. 
+
+
 
+:pushpin:**Common Causes of Redesign** :star::star::star:
 
 
 
 
 
 
+
+
+
+
+
 :pushpin:****
 
 
@@ -11950,8 +12077,125 @@ You can only achieve polymorphism by interface.
 
 
 :pushpin:****
+
+
+
+# 3.Creational Patterns
+
+## 3.1. Abstract Factory
+
+
+
+## 3.2. Builder
+
+
+
+## 3.3. Factory Method
+
+
+
+## 3.4. Prototype
+
+
+
+## 3.5. Singleton
+
+
+
+## 3.6. Discussion of Creational Patterns
+
+
+
+# 4.Structural Patterns
+
+## 4.1. Adapter
+
+
+
+## 4.2. Bridge
+
+
+
+## 4.3. Composite
+
+
+
+## 4.4. Decorator
+
+
+
+## 4.5. Facade
+
+
+
+## 4.6. Flyweight
+
+
+
+## 4.7. Proxy
+
+
+
+## 4.8. Discussion of Structural Patterns
+
+
+
+
+
+
+
+# 5.Behavioral Patterns
+
+
+
+## 5.1. Chain of Responsibility
+
+
+
+## 5.2. Command
+
+
+
+## 5.3. Interpreter
+
+
+
+## 5.4. Iterator
+
+
+
+## 5.5. Mediator
+
+
+
+## 5.6. Memento
+
+
+
+## 5.7. Observer
+
+
+
+## 5.8. State
+
+
+
+## 5.9. Strategy
+
+
+
+## 5.10. Template Method
+
+
+
+## 5.11. Visitor
+
 
 
+## 5.12. Discussion of Behavioral Patterns
 
 
 
+[creational_md]: #Principle
+[structural_md]: #xxx
+[behavioral_md]: #xxx
