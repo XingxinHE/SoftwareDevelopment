@@ -371,7 +371,7 @@ Design patterns help you to identify an appropriate object with abstraction.
 
 :pushpin:**What is Granularity?**
 
-Granularity is a level of details(LOD).
+Granularity is a level of details(LOD).  [颗粒度 in CHN]
 
 
 
@@ -636,143 +636,211 @@ Change is fxxking everywhere. You know that.
 
 Design patterns help you avoid this by ensuring that **a ROBUST system can change in specific ways**. 
 
-[Abstract Factory][creational_abstract_factory]
-
-[Decorator][structural_decorator]
-
-[Memento][behavioral_memento]
-
 
 
 :pushpin:**Common Causes of Redesign** :star::star::star:
 
+The following are the common causes of redesign in Software Development.
 
+> ​	:one:*Creating an object by specifying a class explicitly*:x:
 
+**Description:page_facing_up:** Specifying a class name when you create an object commits you to a particular implementation rather than a particular interface.
 
+**Solution**:heavy_check_mark:: create objects indirectly by [Abstract Factory][iAbstract Factory] ,  [Factory Method][iFactory Method],   [Prototype][iPrototype]
 
 
 
+> ​	:two:*Dependence on specific operations*:x:
 
+**Description:page_facing_up:** Commit one way and hardcode of satisfying a request.
 
+**Solution**:heavy_check_mark::   create dynamic request at compile-time and at run-time by [Chain of Responsibility][iChain of Responsibility] [Command][iCommand ]
 
 
-:pushpin:****
 
+> ​	:three:*Dependence on hardware and software platform*:x:
 
+**Description:page_facing_up:** (You know that)
 
+**Solution**:heavy_check_mark: : design system not to limit its on platform by [Abstract Factory][iAbstract Factory],  [Bridge][iBridge]
 
 
 
+> ​	:four:*Dependence on object representations or implementations*:x:
 
-:pushpin:****
+**Description:page_facing_up:** Clients that know how an object is represented, stored, located, or implemented might need to be changed when the object changes. Hiding this information from clients keeps changes from cascading!:star: (若客户知道一个obj怎么表达，他肯定会根据这个"表达"来修改，因此我们需要隐藏这个"表达"，越抽象越好)。
 
+**Solution**:heavy_check_mark:: You can make these objects more abstract by  [Abstract Factory][iAbstract Factory] ,[Bridge ][iBridge], [Memento][iMemento ], [Proxy][iProxy ]
 
 
 
+> ​	:five:*Algorithmic dependencies*:x:
 
+**Description:page_facing_up:** :  Algorithms always change. Objects that depend on an algorithm therefore change.
 
+**Solution**:heavy_check_mark:: Algorithms that are likely to change should be isolated by [Builder][iBuilder], [Iterator][iIterator], [Strategy][iStrategy], [Template Method][iTemplate Method], [Visitor][iVisitor]
 
-:pushpin:****
 
 
+> ​	:six:*Tight coupling*:x:
 
+**Description:page_facing_up:** :  Classes that are tightly coupled are hard to reuse in isolation.
 
+**Solution**:heavy_check_mark:: Develop loosely coupled systems by [Abstract Factory][iAbstract Factory], [Bridge][iAbstract Factory], [Chain of Responsibility][iChain of Responsibility], [Command][iCommand], [Facade][iFacade], [Mediator][iMediator], [Observer][iObserver]
 
 
 
-:pushpin:****
+> ​	:seven:*Extending functionality by subclassing*:x:
 
+**Description:page_facing_up:** :  Customizing an object by subclassing is **HARD**. Every new class has a **fixed** implementation overhead (initialization, finalization, etc.). Defining a subclass also **requires** an in-depth understanding of the parent class.
 
+**Solution**:heavy_check_mark:: You can use <u>**object composition**</u> in general and **<u>delegation</u>** in particular provide flexible alternatives to inheritance for combining behavior. by [Bridge][iBridge], [Chain of Responsibility][iChain of Responsibility], [Composite][iComposite], [Decorator][iDecorator], [Observer][iObserver], [Strategy][iStrategy]
 
 
 
+> ​	:eight:*Inability to alter classes conveniently*:x:
 
+**Description:page_facing_up:** :  Imagine you have to modify a class that can't be modified conveniently because the class is for commercial target.
 
-:pushpin:****
+**Solution**:heavy_check_mark:: You can solve this by [Adapter][iAdapter], [Decorator][iDecorator], [Visitor][iVisitor]
 
 
 
 
 
 
+:pushpin:**Changes in 3 classes of software**
 
-:pushpin:****
+> ​	:one:*application programs*
 
+required generalization+
 
+required flexibility+
 
+e.g. standalone software
 
+> ​	:two:*toolkits*
 
+required generalization++
 
+required flexibility++
 
-:pushpin:****
+e.g. libigl
 
+> ​	:three:*frameworks*
 
+required generalization+++
 
+required flexibility+++
 
+e.g. Unreal Engine, NET Framework
 
 
 
-:pushpin:****
+## 1.7. How to Select a Design Pattern
 
+Within more than 20 design patterns, it's hard to choose among them. The followings are the approach can help you choose the Design Pattern.
 
+:pushpin:**Consider how design patterns solve design PROBLEMS**
 
+Refer to section 1.6.,
 
+<img src="img/image-20211222163645970.png" alt="image-20211222163645970" style="zoom: 80%;" />
 
 
 
-:pushpin:****
+:pushpin:**Scan Intent Section**
 
+- Quickly scan the intent in [1.4.][#14-the-catalog-of-design-patternsstar] , find the appropriate one.
+- Narrow the search by table in [1.5.][#15-categorizing-design-patternsstar]
 
 
 
+:pushpin:**Study how patterns interrelate**
 
+Refer the relational graph in [1.6.][#16-how-design-patterns-solve-design-problem]  , it will help you understand the relationship in a bigger picture.
 
 
-:pushpin:****
 
+:pushpin:**Study patterns of like purpose**
 
+Read the essential **intro** of each categories of patterns. :star: 
 
+- [Creational][#3creational-patterns]
+- [Structural][#4structural-patterns]
+- [Behavioral][#5behavioral-patterns]
 
 
 
+:pushpin:**Examine a cause of redesign**
 
-:pushpin:****
+When you are **frustrated by a redesign** problem, refer to page [24][#166-designing-for-change] to **avoid causes of redesign**.
 
 
 
+:pushpin:**Identify the VARIABLE in your design**
 
+Rather than focusing on the causes of redesign, find the "**changes**" instead! The following is a table highlighting those variables.
 
+![image-20211222173535064](img/image-20211222173535064.png)
 
 
-:pushpin:****
 
+## 1.8. How to Use a Design Pattern
 
+:pushpin:**1.Read the overview:eyes:**
 
+Read the pattern once through for an overview. Pay particular **attention** to the **<u>Applicability</u>** and **<u>Consequences</u>** sections to ensure the pattern is right for your problem.
 
 
 
+:pushpin:**2.Study the structure, participants, and collaboration section**
 
-:pushpin:****
+Make sure you **understand** the **classes** and **objects** in the pattern and **<u>how they relate</u>** to one another.
 
 
 
+:pushpin:**3.Sample Code**
 
+Studying the code **helps you** learn **how to implement the pattern**.
 
 
 
-:pushpin:****
+:pushpin:**4.Choose NAME for pattern participants**
 
+Choose names for pattern participants that are **meaningful in** the application **context**. That **helps** make the pattern more explicit in the **implementation**.
 
 
 
+:pushpin:**5.Define the classes**
 
+Declare their **interfaces**, establish their **inheritance relationships**.
 
+<img src="img/image-20211222175349089.png" alt="image-20211222175349089" style="zoom: 50%;" />
 
-:pushpin:****
+Define the instance variables that represent **data** and **object references**. 
 
+<img src="img/image-20211222175408276.png" alt="image-20211222175408276" style="zoom: 67%;" />
 
+**Identify existing classes** in your application that the pattern will affect, and **modify them** accordingly.
 
 
+
+:pushpin:**6.Define <u>application-specific</u> names for operation**
+
+**Denote** the operation in light of <u>responsibilities</u> and <u>collaborations</u>. 
+
+Be **consistent** in your **naming conventions**. For example, you might use the "Create-" prefix consistently to denote a factory method.
+
+
+
+:pushpin:**7.Implement the operations**
+
+Implement the operations to carry out their **responsibilities** and **collaborations** defined in the pattern.
+
+
+
+# 2.A Case Study: Design a Document Editor
 
 
 
@@ -12088,6 +12156,206 @@ Design patterns help you avoid this by ensuring that **a ROBUST system can chang
 
 # 3.Creational Patterns
 
+:pushpin:**What creational patterns for?**
+
+Creational design patterns <u>abstract the instantiation</u> process which make a system independent of how its objects are <u>**created**</u>, <u>**composed**</u>, and <u>**represented**</u>.
+
+
+
+:pushpin:**Main Strategy**
+
+Creational patterns depend more on **<u>object composition</u>** than <u>*class inheritance*</u>.
+
+
+
+:pushpin:**2 Main Charactersitcs**
+
+There are **2** main characteristics/features of creational patterns:
+
+- They all <u>**encapsulate**</u> knowledge about which concrete classes the system uses.
+- They all <u>**hide**</u> how instances of these classes are created and put together.
+
+
+
+:pushpin:**Case Study **
+
+We will consider the construction process of a computer game. In short, the architecture of a maze. The maze is constructed by the following:
+
+- a set of rooms, walls, doors
+- room specify the access in 4 orientations
+- door specify the access
+
+<img src="img/image-20211225172030523.png" alt="image-20211225172030523" style="zoom: 80%;" />
+
+
+
+Each room has 4 sides.(`enum`)
+
+```c++
+enum Direction (North, South, East, West);
+```
+
+
+
+The `MapSite` is the **<u>primitive</u>** element of this project.
+
+```c++
+class MapSite
+{
+    public:
+    virtual void Enter() = 0;
+}
+```
+
+
+
+`Room` is the concrete subclass of `Mapsite` which defines the relationship between components in the maze.
+
+```c++
+class Room : public MapSite
+{
+private:
+    MapSite* _sides[4];  //the private member store the 4 sides of object
+    int _roomNumber;     //the room number of this room
+
+public:
+    Room(int roomNo);                      //constructor
+    
+    MapSite* GetSide(Direction) const;     //Get the side of a room
+    void SetSide(Direction, MapSite*);     //Set the side of a room
+    virtual void Enter();                  //Enter function
+}
+```
+
+
+
+`Wall` occurs on each side of a room(maybe).
+
+```c++
+class Wall : public MapSite
+{
+public:
+    Wall();                //Constructor
+    virtual void Enter();  //Enter function
+}
+```
+
+
+
+`Class` occurs on each side of a room(maybe).
+
+```c++
+class Door : public MapSite
+{
+private:
+    Room* _room1;    //door attached to 2 rooms, this is one of them
+    Room* _room2;    //door attached to 2 rooms, this is one of them
+    bool _isOpen;    //see if it is open
+    
+public:
+    Door(Room* = 0, Room* = 0);    //constructor with 2 rooms
+    virtual void Enter();          //Enter function
+    Room* OtherSideFrom(Room*);    //Return the other side by pointer
+}
+```
+
+
+
+`Maze` is to represent a collection of rooms.
+
+```c++
+class Maze
+{
+    private:
+    //..
+    
+    public:
+    Maze();  //constructor
+    void AddRoom(Room*);  //Add room to this maze
+    Room* RoomNo(int) const;  //A method look-up a room number by using a linear search, a hash table,or even a simple array.
+    
+}
+```
+
+
+
+`MazeGame` is the class to **<u>create</u>** the maze. This is the **KEY** concept of creational patterns! 
+
+:x:You don't explicitly define what is a `Maze` should be.
+
+:heavy_check_mark:Rather you create the `MazeGame` with a method called `CreateMaze` with flexibility to modify the formula in the future.
+
+```c++
+Maze* MazeGame::CreateMaze()
+{
+    Maze* aMaze = new Maze();
+    Room* r1 = new Room(1);            //init a room with RoomNo 1
+    Room* r2 = new Room(2);            //init a room with RoomNo 2
+    Door* doorR1R2 = new Door(r1, r2); //init a door between Room1 and Room2
+    
+    //Set the 4 sides of Room1
+    r1 -> SetSide(North, new Wall());
+    r1 -> SetSide(East, doorR1R2);
+    r1 -> SetSide(South, new Wall());
+    r1 -> SetSide(West, new Wall());
+    
+    //Set the 4 sides of Room2
+    r2 -> SetSide(North, new Wall());
+    r2 -> SetSide(East, new Wall());
+    r2 -> SetSide(South, new Wall());
+    r2 -> SetSide(West, doorR1R2);
+    
+    //Add the rooms to the maze
+    aMaze -> AddRoom(r1);
+    aMaze -> AddRoom(r2);
+    
+    return aMaze;
+}
+```
+
+
+
+The preceding code is with great flexibility. Although you can make it simpler, you will lose the flexibility to modify the maze eventually.
+
+For example, considering the `Room` constructor could initialize the sides with walls ahead of time.
+
+```c++
+Maze* MazeGame::CreateMaze()
+{
+    Maze* aMaze = new Maze();
+    Room* r1 = new Room(1, new Wall(), doorR1R2, new Wall(), new Wall());
+    Room* r2 = new Room(2, new Wall(), new Wall(), doorR1R2, new Wall()); 
+    
+    //LOST FLEXIBILITY!!!
+}
+```
+
+:x::warning:It **hard-codes** the maze layout. Changing the layout means changing this member function, either by overriding it—which means reimplementing the whole thing—or by changing parts of it—which is **<u>error-prone</u>** and **<u>doesn't promote reuse</u>**.
+
+
+
+
+
+
+
+:pushpin:**How Creational Design Patterns can help?**
+
+The KEY idea of creational patterns is to **remove explicit references to concrete classes** from code that needs to instantiate them.
+
+- [Factory Method][iFactory Method] - The `CreateMaze` method is <u>**virtual**</u> which allows subclass of `MazeGame` to override it.
+
+- [Abstract Factory][iAbstract Factory] - The `CreateMaze` is passed <u>**an object as a parameter**</u> to create elements[^1] , then you can change the classes of those things by passing a different parameter.
+
+- [Builder][iBuilder] - The `CreateMaze` is passed **<u>an object that can create a new `maze` in its entirety</u>** using operations like adding elements[^1], then you can use <u>inheritance</u> to change parts of the `maze` or the way the `maze` is built.
+
+- [Prototype][iPrototype] - The `CreateMaze` is **<u>parameterized by various prototypical elements</u>**[^1], which it then copies and adds to the `maze`,then you can change the `maze`'s composition by replacing them.
+
+[Singleton][iSingleton], the one not mentioned above, can <u>**ensure there's only one maze per game**</u> and that all game objects have ready access to it—**<u>without resorting to global variables or functions</u>**.
+
+
+
+
+
 ## 3.1. Abstract Factory
 
 
@@ -12202,6 +12470,34 @@ Design patterns help you avoid this by ensuring that **a ROBUST system can chang
 
 
 
-[creational_abstract_factory]: #31-abstract-factory
-[structural_decorator]: #44-decorator
-[behavioral_memento]: #56-memento
+[^1]: The elements here refer to instances of Wall, Door, Room
+
+
+
+[iAbstract Factory]: #31-abstract-factory
+[iBuilder]: #32-builder
+[iFactory Method]: #33-factory-method
+[iPrototype]: #34-prototype
+[iSingleton]: #35-singleton
+
+[iAdapter]: #41-adapter
+[iBridge]: #42-bridge
+[iComposite]: #43-composite
+[iDecorator]: #44-decorator
+[iFacade]: #45-facade
+[iFlyweight]: #46-flyweight
+[iProxy]: #47-proxy
+
+
+[iChain of Responsibility]: #51-chain-of-responsibility
+[iCommand]: #52-command
+[iInterpreter]: #53-interpreter
+[iIterator]: #54-iterator
+[iMediator]: #55-mediator
+[iMemento]: #56-memento
+[iObserver]: #57-observer
+[iState]: #58-state
+[iStrategy]: #59-strategy
+[iTemplate Method]: #510-template-method
+[iVisitor]: #511-visitor
+
