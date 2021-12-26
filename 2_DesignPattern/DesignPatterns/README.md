@@ -12374,7 +12374,12 @@ The KEY idea of creational patterns is to **remove explicit references to concre
 
 ## 3.5. Singleton
 
-
+<div align="center">
+    <figure>
+        <img src="img/singleton.png" style="width:50%" class="center">
+        <figcaption>Singleton ©Dive Into Design Patterns</figcaption>
+    </figure>
+</div>
 
 ## 3.6. Discussion of Creational Patterns
 
@@ -12439,6 +12444,15 @@ The KEY idea of creational patterns is to **remove explicit references to concre
 
 
 ## 5.5. Mediator
+
+<div align="center">
+    <figure>
+        <img src="img/mediator.png" style="width:50%" class="center">
+        <figcaption>Mediator ©Dive Into Design Patterns</figcaption>
+    </figure>
+</div>
+
+
 
 
 
