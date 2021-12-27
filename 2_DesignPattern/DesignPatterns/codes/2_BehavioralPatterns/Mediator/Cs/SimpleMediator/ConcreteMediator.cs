@@ -21,6 +21,10 @@ namespace SimpleMediator
             this._component1 = com1;
             this._component2 = com2;
 
+            /*
+             * The reason why SetMediator can set `this` as IMediator is because
+             * ConcreteMediator is also IMediator!!
+             */
             this._component1.SetMediator(this);
             this._component2.SetMediator(this);
         }

@@ -12389,6 +12389,17 @@ The KEY idea of creational patterns is to **remove explicit references to concre
 
 ## 4.1. Adapter
 
+<div align="center">
+    <figure>
+        <img src="img/adapter.png" style="width:50%" class="center">
+        <figcaption>Adapter ©Dive Into Design Patterns</figcaption>
+    </figure>
+</div>
+
+
+
+
+
 
 
 ## 4.2. Bridge

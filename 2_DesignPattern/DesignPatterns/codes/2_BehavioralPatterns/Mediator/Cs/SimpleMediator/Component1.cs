@@ -18,6 +18,10 @@ namespace SimpleMediator
         {
             Console.WriteLine("Component 1 does A.");
             this._mediator.Notify(this, "A");
+            /* Because this _mediator will be set to ConcreteMediator
+             * therefore, invoke this Notify here basically invoke the
+             * Notify function of ConcreteMediator!!
+             */
         }
 
         //Operation B of component 1
@@ -25,6 +29,10 @@ namespace SimpleMediator
         {
             Console.WriteLine("Component 1 does B.");
             this._mediator.Notify(this, "B");
+            /* Because this _mediator will be set to ConcreteMediator
+             * therefore, invoke this Notify here basically invoke the
+             * Notify function of ConcreteMediator!!
+             */
         }
     }
 }
