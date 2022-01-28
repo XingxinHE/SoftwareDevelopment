@@ -15,19 +15,19 @@ namespace PrimeGenerator
 
         public static void TestPrimes()
         {
-            int[] nullArray = GeneratePrime.GeneratePrimes(0);
+            int[] nullArray = PrimeGenerator.GeneratePrimes(0);
             if (!int.Equals(nullArray.Length, 0))
             { 
                 throw new Exception("Failed"); 
             }
 
-            int[] minArray = GeneratePrime.GeneratePrimes(2);
+            int[] minArray = PrimeGenerator.GeneratePrimes(2);
             if (!int.Equals(minArray.Length, 1) || !int.Equals(minArray[0], 2))
             {
                 throw new Exception("Failed");
             }
 
-            int[] threeArray = GeneratePrime.GeneratePrimes(3);
+            int[] threeArray = PrimeGenerator.GeneratePrimes(3);
             if (!int.Equals(threeArray.Length, 2) || 
                 !int.Equals(threeArray[0], 2) ||
                 !int.Equals(threeArray[1], 3))
@@ -35,7 +35,7 @@ namespace PrimeGenerator
                 throw new Exception("Failed");
             }
 
-            int[] centArray = GeneratePrime.GeneratePrimes(100);
+            int[] centArray = PrimeGenerator.GeneratePrimes(100);
             if (!int.Equals(centArray.Length, 25) || 
                 !int.Equals(centArray[24], 97))
             {
