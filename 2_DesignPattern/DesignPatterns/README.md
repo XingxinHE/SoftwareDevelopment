@@ -842,133 +842,239 @@ Implement the operations to carry out their **responsibilities** and **collabora
 
 # 2.A Case Study: Design a Document Editor
 
+This chapter will illustrate Design Patterns with a Case Study, a document editor, Lexi.
 
+<img src="img/image-20211227175550913.png" alt="image-20211227175550913" style="zoom:50%;" />
 
-:pushpin:****
+## 2.1. Design Problems Overview [7/7]
 
+The following are the design problems in this case study.
 
+:one:**Document structure**
 
+> ​	It refers to the way we organize the information which will impact the design of the rest of the application.
 
+:two:**Formatting**
 
+> ​	How does Lexi actually arrange text and graphics into lines and columns?
 
+:three:**Embellishing the user interface**
 
-:pushpin:****
+> ​	UI stuffs
 
+:four:**Supporting multiple look-and-feel standards**
 
+> ​	Adapt easily to different look-and-feel standards
 
+:five:**Supporting multiple window systems**
 
+> ​	(you know that)
 
+:six:**User operations**
 
+> ​	the "C" in MVC
 
-:pushpin:****
+:seven:**Spelling checking and hyphenation**
 
+> ​	for grammar shxt
 
 
 
+## 2.2 Document Structure [1/7]
 
+:pushpin:**What is it?**
 
+A document is ultimately just **<u>an arrangement of basic graphical elements</u>** such as characters, lines, polygons, and other shapes.
 
-:pushpin:****
 
 
+:pushpin:**Basic Principle**
 
+:one: **Treat them as a unit** rather than a mass of primitive objects.   e.g. click table as a table but a the line or individual text inside of it.
 
+:two:  Choose an internal representation that **matches** the **documents' physical structure**.
 
+:three:  **No distinguish** between single elements and groups of elements in the **internal representation**.
 
 
-:pushpin:****
 
+:pushpin:**Recursive Composition**
 
+A common way to represent hierarchically structured information is through a technique called **recursive composition**.
 
 
 
+> ​	An intuitive feel:
 
+<img src="img/image-20211228095930670.png" alt="image-20211228095930670"  />
 
-:pushpin:****
+> ​	Objects structure behind:
 
+![image-20211228100039290](img/image-20211228100039290.png)
 
+It's a bit of similar to the stack component in [HumanUI](https://www.food4rhino.com/en/app/human-ui) where you **<u>composite objects in row and/or in columns recursively</u>**.
 
 
 
+To implement the preceding principle, there are **2** things should be aware:
 
+- The objects need corresponding classes. (recursive composition)
+- These classes must have **compatible interface**. (treat them as a unit)
 
-:pushpin:****
+Therefore, you have the following class hierarchy:
 
+<img src="img/image-20211228100543054.png" alt="image-20211228100543054" style="zoom: 80%;" />
 
 
 
+:pushpin:**Glyphs**
 
+A **Glyph abstract class** is the <u>very elemental thing</u>[^2] for all objects that can appear in a document structure. Its subclasses define:
 
+- primitive graphical elements (like characters and images)
 
-:pushpin:****
+- structural elements (like rows and columns).
 
 
 
+Glyphs have **3** basic responsibilities:
 
+:one:how to draw themselves
 
+:two:what space they occupy
 
+:three:their children and parent.
 
-:pushpin:****
+| Responsibility | Operations                                                   |
+| -------------- | ------------------------------------------------------------ |
+| appearance     | `virtual void Draw(Window* )`<br/>`virtual void Bounds(Rect& )` |
+| hit detection  | `virtual bool Intersects(const Point& )`                     |
+| structure      | `virual void Insert(Glyph* , int)`<br/>`virtual void Remove(Glyph* )`<br/>`virtual Glyph* Child(int)`<br/>`virtual Glyph* Parent()` |
 
 
 
+We will make an example for each responsibility:
 
 
 
+:pushpin:**Responsibility - appearance**
 
-:pushpin:****
+The `Window` class **defines graphics operations** for rendering text and basic shapes in a window on the screen. Therefore, the `Draw()` in `Rectangle` class will draw a rectangle in the window by **2** corners.
 
+```c++
+void Rectangle::Draw (Window* w) 
+{
+    w->DrawRect(_x0, _y0, _x1, _y1);
+}
+```
 
 
 
+:pushpin:**Responsibility - hit detection**
 
+Hit detection refers to human-computer interaction. It receives a mouse coordinate by `Point&`. If it returns `true`, then it means you are hover over the object.
 
 
-:pushpin:****
 
+:pushpin:**Responsibility - structure**
 
+You use `Insert()` to add objects while `Remove` to remove objects.
 
+The hierarchy relation can be defined via `Child()` and `Parent()`.
 
 
 
+:pushpin:**What Design Pattern can help?**
 
-:pushpin:****
+The [Composite][iComposite] pattern **captures the essence of recursive composition** in object-oriented terms.
 
 
 
 
 
+## 2.3. Formatting [2/7]
 
+:pushpin:**What "formatting" really?**
 
-:pushpin:****
+The formatting in this context refers to the following: margin widths, indentation, and tabulation; single or double space; and probably many other formatting constraints.
 
+You can see it as the <u>text</u> and <u>layout styles</u> on InDesign.
 
 
 
+:pushpin:**Strategy on formatting algorithm**
 
+- <u>**Trade-off**</u>: on <u>compile time</u> and <u>appearance</u>, the authors prefer the former rather than the latter.
 
+- <u>**Dependence**</u>: the authors insist the <u>formatting algorithms</u> should be <u>**independent**</u> from the <u>document structure.</u>
 
-:pushpin:****
 
 
+:pushpin:**Compositor and Composition**
 
+- Compositor: class for objects that can encapsulate formatting algorithms
+- Composition: the children of composition is a glyph subclass which actually does the formatting.
 
 
 
+:pushpin:**Basic interface of compositor**
 
-:pushpin:****
+| Responsibility | Operations                           |
+| -------------- | ------------------------------------ |
+| what to format | `void SetComposition(Composition* )` |
+| when to format | `virtual void Compose()`             |
 
 
 
+:pushpin:**Diagram of Compositor and Composition**
 
+In short, 
 
+- composition **defines** <u>what kind of and how many</u> **elements** should be in the documents.
 
+- compositor **regulates** <u>how should</u> <u>each element</u> and <u>elements in total</u> should look like.
 
-:pushpin:****
+<img src="img/image-20220130201021247.png" alt="image-20220130201021247" style="zoom: 67%;" />
 
 
 
 
+
+:pushpin:**What Design Pattern could help?**
+
+The  [Strategy][iStrategy] pattern can help, which encapsulates <u>various strategies</u> regarding <u>different contexts</u>. e.g. apply different formatting algorithms in light of different themes(compositor).
+
+
+
+:pushpin:**What is the KEY of Strategy pattern?**
+
+The key is designing interfaces for the strategy and its context that are <u>**general enough**</u> to support arrange of algorithms.
+
+For example,  
+
+- [Composition] the `Glyph` interface supports for 
+  - child access, 
+  - insertion
+  - removal
+- [Compositor] subclasses therefore can apply different formatting algorithms:
+  - Array composing
+  - Tex composing
+  - Simple composing
+- [Outcome] change the document's physical structure accordingly
+
+
+
+## 2.4. Embellishing the User Interface[3/7]
+
+:pushpin:**What is Embellishment?**
+
+The embellishment[^3] refers to the decoration onto the user interface. e.g. add a border, add a scroll bar
+
+
+
+:pushpin:**Strategy on Embellishment**
+
+Since embellishment literally refers to "decoration", the user interface object <u>should not be aware of</u> the existence of embellishment.
 
 
 
@@ -12358,17 +12464,553 @@ The KEY idea of creational patterns is to **remove explicit references to concre
 
 ## 3.1. Abstract Factory
 
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
+
+
+
+
+
 
 
 ## 3.2. Builder
 
 
 
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
+
+
+
 ## 3.3. Factory Method
+
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
+
+
 
 
 
 ## 3.4. Prototype
+
+
+
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
 
 
 
@@ -12380,6 +13022,143 @@ The KEY idea of creational patterns is to **remove explicit references to concre
         <figcaption>Singleton ©Dive Into Design Patterns</figcaption>
     </figure>
 </div>
+
+
+
+
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
+
+
 
 ## 3.6. Discussion of Creational Patterns
 
@@ -12399,6 +13178,138 @@ The KEY idea of creational patterns is to **remove explicit references to concre
 
 
 
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
+
 
 
 
@@ -12406,7 +13317,398 @@ The KEY idea of creational patterns is to **remove explicit references to concre
 
 
 
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
+
+
+
 ## 4.3. Composite
+
+<div align="center">
+    <figure>
+        <img src="img/composite.png" style="width:50%" class="center">
+        <figcaption>Composite ©Dive Into Design Patterns</figcaption>
+    </figure>
+</div>
+
+
+
+
+🎯**Intent**
+
+___
+
+Compose objects into **tree structures** to represent part-whole hierarchies. Composite lets clients <u>treat</u> **individual objects** and **compositions of objects** **<u>uniformly</u>**.
+
+
+
+:muscle:**Motivation**
+
+___
+
+Suppose you have **2** main things in your application:
+
+- the object
+- the composite of object
+
+And you don't want to explicitly create a container for the composite of object. The Composite pattern describes how to **use recursive composition** so that clients don't have to make this distinction.
+
+![image-20211228113358722](img/image-20211228113358722.png)
+
+The **<u>key</u>**:star: to the Composite pattern is:
+
+- an **abstract class** that **represents both primitives and their containers**.
+- declares operations that **all composite objects share**.
+- primitive object have no child object
+- composite is an aggregate of primitive object
+
+
+
+
+
+
+
+:earth_asia:**Real World Analogy**
+
+___
+
+We can see the composite pattern in an army.
+
+
+
+<div align="center">
+    <figure>
+        <img src="img/composite-live-example.png" style="width:20%" class="center">
+        <figcaption>Analogy of Composite in the real world ©Dive Into Design Patterns</figcaption>
+    </figure>
+</div>
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+Use Composite pattern when:
+
+- You want to => represent **part-whole hierarchies** of objects.
+- You want to => **ignore** the **difference** between compositions of objects and individual objects.
+- Clients want to => **treat** all objects in the composite structure **uniformly**.
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+![image-20211228114517193](img/image-20211228114517193.png)
+
+The following is a typical composite object structure:
+
+![image-20211228113538944](img/image-20211228113538944.png)
+
+
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+The followings are the participants of Composite Pattern.
+
+
+
+> ​	:black_circle: **Component**  (e.g. The graphic)
+
+It is responsible for the followings:
+
+- **declares** the **interface** for objects in the composition. 
+
+- **implements default behavior** for the interface common to all classes
+
+- declares an **interface** for <u>accessing and managing</u> its **child** components.
+
+- (optional) defines an **interface** for <u>accessing</u> a component's **parent** in the recursive structure
+
+
+
+> ​	:black_circle: **Leaf**  (e.g. Rectangle, Line, Text, etc.)
+
+It is responsible for the followings:
+
+- represents <u>leaf objects</u> in the composition. A leaf **has no children**.
+
+- defines **behavior for primitive objects** in the composition.
+
+
+
+> ​	:black_circle: **Composite**  (e.g. Picture, etc.)
+
+It is responsible for the followings:
+
+- defines **behavior** for <u>components having children</u>.
+- **stores** child components
+
+- implements **child-related operations** in the Component interface
+
+
+
+> ​	:black_circle: **Client**
+
+It is responsible for the followings:
+
+- **manipulates objects** in the composition through the Component interface.
+
+
+
+
+
+For a more transparent and vivid understanding, we layout the comparison:
+
+| Generic Participants | Participants in Lexi                                     | Participants in Maze Game                 |
+| -------------------- | -------------------------------------------------------- | ----------------------------------------- |
+| Component            | `(abstract class)`  Graphic                              | `(abstract class)`  MapSite               |
+| Leaf                 | `(instance)` Rectangle, Line, Text                       | `(instance)`  Wall, Door, Room            |
+| Composite            | `(composite of instances)`  Picture, Diagram, Text Block | `(composite of instances)`  Maze1, Maze 2 |
+| Client               | User                                                     | Player                                    |
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+<u>Clients</u> use the <u>Component class interface</u> to **interact with objects** in the composite structure. 
+
+- If the recipient is a <u>Leaf</u>
+  - then the request is **<u>handled directly</u>**. 
+- If the recipient is a <u>Composite</u>
+  - then it usually **<u>forwards requests to</u>** its <u>child</u> components, possibly performing additional operations before and/or after forwarding.
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+The Composite pattern:
+
+- :heavy_check_mark:  **<u>defines class hierarchies consisting of primitive objects and composite objects</u>**.
+  - Primitive objects can be composed into complex objects and recursive objects. 
+  - Client codes freely perform on both primitive object and a composite object.
+- :heavy_check_mark:  **<u>makes the client simple</u>**.
+  - Clients treat composite structures and individual objects uniformly.
+  - Clients don't and shouldn't know whether they're dealing with a leaf or a composite.
+  - therefore avoid write tag-and-case-statement-style functions over the classes that define the composition.
+- :heavy_check_mark:  <u>**makes it easier to add new kinds of components**</u>.
+  - New Composite or Leaf work automatically with existing structures and client code.
+  - Clients don't have to be changed for new Component classes
+- :heavy_check_mark:  **<u>make your design overly general</u>**
+  - While there is a side effect, since you are flexible do a composite:arrow_up_small:, it means you are hard to restrict it:arrow_down_small:.
+  - Since composite focus on "GENERAL", you have to use run-time checks for constraints.
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+There are many issues to consider when **implementing** the Composite pattern
+
+- :heavy_check_mark:  <u>Explicit parent references</u>.
+  - [**Why**]  simplify the traversal and management of a composite structure
+  - [**How**]  
+    - define the parent reference is in the Component class
+    - implemented the `Add` and `Remove` operations of the Composite class
+- :heavy_check_mark:  <u>Sharing components</u>
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
 
 
 
@@ -12414,7 +13716,275 @@ The KEY idea of creational patterns is to **remove explicit references to concre
 
 
 
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
+
+
+
 ## 4.5. Facade
+
+
+
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
 
 
 
@@ -12422,7 +13992,275 @@ The KEY idea of creational patterns is to **remove explicit references to concre
 
 
 
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
+
+
+
 ## 4.7. Proxy
+
+
+
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
 
 
 
@@ -12442,7 +14280,207 @@ The KEY idea of creational patterns is to **remove explicit references to concre
 
 
 
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
+
+
+
 ## 5.2. Command
+
+🎯**Intent**
+
+___
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
 
 
 
@@ -12450,7 +14488,275 @@ The KEY idea of creational patterns is to **remove explicit references to concre
 
 
 
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
+
+
+
 ## 5.4. Iterator
+
+
+
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
 
 
 
@@ -12464,6 +14770,144 @@ The KEY idea of creational patterns is to **remove explicit references to concre
 </div>
 
 
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
+
+
+
+
+
+
+
 
 
 
@@ -12471,7 +14915,279 @@ The KEY idea of creational patterns is to **remove explicit references to concre
 
 
 
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
+
+
+
+
+
 ## 5.7. Observer
+
+
+
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
+
+
 
 
 
@@ -12479,7 +15195,277 @@ The KEY idea of creational patterns is to **remove explicit references to concre
 
 
 
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
+
+
+
+
+
 ## 5.9. Strategy
+
+
+
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
 
 
 
@@ -12487,7 +15473,283 @@ The KEY idea of creational patterns is to **remove explicit references to concre
 
 
 
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
+
+
+
+
+
 ## 5.11. Visitor
+
+
+
+🎯**Intent**
+
+___
+
+
+
+
+
+
+
+
+
+:muscle:**Motivation**
+
+___
+
+
+
+
+
+
+
+
+
+:heavy_dollar_sign:**Applicability**
+
+___
+
+
+
+
+
+
+
+
+
+:building_construction:**Structure**
+
+___
+
+
+
+
+
+
+
+:family_man_woman_girl_boy:**Participants**
+
+___
+
+
+
+
+
+
+
+:handshake:**Collaboration**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:chart_with_upwards_trend:**Consequence**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:computer:**Implementation**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:keyboard:**Sample Code**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:page_with_curl:**Known Issue**
+
+___
+
+
+
+
+
+
+
+
+
+
+
+:couple:**Related Patterns**
+
+___
+
+
+
+
+
+
+
+
 
 
 
@@ -12495,7 +15757,14 @@ The KEY idea of creational patterns is to **remove explicit references to concre
 
 
 
+# End
+
+
+
 [^1]: The elements here refer to instances of Wall, Door, Room
+
+[^2]: Glyph是构成这个UI体系最基础的元素
+[^3]: embellish in English: to make something more beautiful by adding decorations to it
 
 
 
