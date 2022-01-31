@@ -14,7 +14,7 @@
 
 # 5.Refactoring
 
-:pushpin:**What is the responsibility of software module?**
+📌**What is the responsibility of software module?**
 
 There are **3** functions.
 
@@ -24,25 +24,25 @@ There are **3** functions.
 
 
 
-:pushpin:**What Refactoring does?**
+📌**What Refactoring does?**
 
 It helps the preceding 3 functions.
 
 
 
-:pushpin:**Good Naming**
+📌**Good Naming**
 
 After reading this chapter, I found out a good name for variable is super important!!
 
 
 
-:pushpin:**Split the Procedure**
+📌**Split the Procedure**
 
 An easy to understand code should be split into a clear function.
 
 
 
-:pushpin:**Effect of Refactoring**
+📌**Effect of Refactoring**
 
 The structure of the program is isolated from parts to parts.
 
@@ -50,19 +50,19 @@ The program is much more easier to be changed.
 
 
 
-:pushpin:**When should you to refactor?**
+📌**When should you to refactor?**
 
 The answer is everyday! Clean your code everyday.
 
 
 
-:pushpin:**Does refactoring important?**
+📌**Does refactoring important?**
 
 Yes, it is super important. Because refactoring produces **clean code** which is the utmost importance. Before investing in principles and patterns, invest in clean code.
 
 
 
-:pushpin:**Example of Refactoring**
+📌**Example of Refactoring**
 
 Please refer to the following commits.
 
@@ -90,7 +90,7 @@ Please refer to the following commits.
 
 # 7.What is Agile Design?
 
-:pushpin:**What is "The Design"?**
+📌**What is "The Design"?**
 
 > ​	UML diagram $\ne$ "The Design"
 
@@ -102,7 +102,7 @@ The design of a software is abstract. You CAN'T list every details of the softwa
 
 
 
-:pushpin:**Design Smell - The Odors of Rotting Software**🤮
+📌**Design Smell - The Odors of Rotting Software**🤮
 
 You can smell the following odors when software rotting...
 
@@ -129,6 +129,151 @@ The answer is "**CHANGES**"! Bit by bit, as the changes continue, these violatio
 Why? **<u>Because the requirements are the most volatile elements in the project</u>**.
 
 So? We should make our designs <u>**resilient**</u> to such changes and employ practices that protect them from rotting.
+
+
+
+📌**Story 1 - Regular Developers Encounter Changes**
+
+> ​	Customer Requirement Ver_1:
+
+Write a program that copies characters from the keyboard.
+
+> ​	Code Designed Ver_1:
+
+The program can be divided into 3 modules:
+
+- 1️⃣ the `ReadKeyboard` module
+- 2️⃣ the `Copy` program which fetches `char` from `ReadKeyboard` and routes them to the `WritePrinter` module
+- 3️⃣ the `WritePrinter` module
+
+```c++
+void Copy()
+{
+    int c;
+    while ((c=RdKbd()) != EOF)
+    WrtPrt(c);
+}
+```
+
+
+
+<img src="img/image-20220131120317181.png" alt="image-20220131120317181" style="zoom: 67%;" />
+
+> ​	Customer Requirement Ver_2:
+
+The program reads characters from the paper tape reader from time to time...
+
+> ​	Code Designed Ver_2:
+
+You use `bool` to encounter such changes.
+
+```c++
+bool ptFlag = false;
+// remember to reset this flag
+void Copy()
+{
+	int c;
+	while ((c=(ptflag ? RdPt() : RdKbd())) != EOF)
+	WrtPrt(c);
+}
+```
+
+
+
+> ​	Customer Requirement Ver_3:
+
+The Copy program needs output to the paper tape punch.
+
+> ​	Code Designed Ver_3:
+
+You continue the last modification philosophy and make a `bool` for the output as well.
+
+```c++
+bool ptFlag = false;
+bool punchFlag = false;
+// remember to reset these flags
+void Copy()
+{
+    int c;
+    while ((c=(ptflag ? RdPt() : RdKbd())) != EOF)
+    	punchFlag ? WrtPunch(c) : WrtPrt(c);
+}
+```
+
+
+
+> ​	Summary
+
+During this whole process, you complained again and again...😡 You almost want to leave the job...
+
+
+
+
+
+📌**Story 2 - Agile Developers Encounter Changes**
+
+The difference begins at the first incoming modification when the agile developers were asked to make the program read from the paper tape reader:
+
+> ​	Code Design Ver_2:
+
+The team has followed the **<u>Open–Closed Principle (OCP)</u>**. This principle helps the program can be extended without modification. In the future, you can add more `Reader`.
+
+```c++
+class Reader
+{
+    public:
+    virtual int read() = 0;
+};
+class KeyboardReader : public Reader
+{
+    public:
+    virtual int read() {return RdKbd();}
+};
+```
+
+From the `Copy` program perspective, you can use select different `Reader`
+
+```c++
+KeyboardReader GdefaultReader;
+void Copy(Reader& reader = GdefaultReader)
+{
+    int c;
+    while ((c=reader.read()) != EOF)
+    WrtPrt(c);
+}
+```
+
+
+
+> ​	Why no similar implementation on the ouput?
+
+The reason is simple. Because the change has not been encountered! You only modify your code once needed, otherwise the code would be **Needless Complexity**.
+
+
+
+📌**How Did the Agile Developers Know What to Do?**
+
+1️⃣They <u>detected the problem</u> by following agile practices
+
+2️⃣They <u>diagnosed the problem</u> by applying design principles
+
+3️⃣They <u>solved the problem</u> by applying the appropriate design pattern.
+
+
+
+The interplay between these 3 aspects of software development is <u>**the act of design**</u>.
+
+
+
+📌**Conclusion**
+
+**Agile design is a process**, not an event.
+
+
+
+
+
+
 
 
 
