@@ -80,6 +80,50 @@ Please refer to the following commits.
 
 # 6.Programming Episode
 
+📌**What is user story?**
+
+It is a material and a context which illustrates the application of software vividly.
+
+
+
+📌**Trick to Start from Scratch**
+
+Start with the one with <u>**less dependency**</u>(easier to test).
+
+
+
+📌**What granularity should be of an object in abstract?**
+
+Focus on an object that actually has behavior, instead of one that just a data store. However, I kind of disagree with this. In Factory pattern, it is a good practice to make a class as a data store.
+
+
+
+📌**Does UML diagram help?**
+
+Sometime it does and sometime it does not. The following diagram is a chart drawn at the beginning.
+
+<img src="img/image-20220201203956074.png" alt="image-20220201203956074" style="zoom:67%;" />
+
+However, in the final neat design. There is no `Frame` class neither `Throw` class. The design is robust enough to handle this game.
+
+
+
+📌**When is inappropriate to use UML diagram?**
+
+When you create them without code to validate them, and then intend to follow them.⚠❌
+
+
+
+📌**Why code is more important than UML diagram?**
+
+Because he best design will evolve as you take tiny little steps, writing tests first.
+
+
+
+📌**Code**
+
+[Bowling Game Test](./codes/Cs/Cs.sln)
+
 
 
 # II.Agile Design
