@@ -126,6 +126,22 @@ Because he best design will evolve as you take tiny little steps, writing tests 
 
 
 
+📌**Applied SRP**
+
+The code in this section adopts the [Single-Responsibility Principle](#8SRP: The Single-Responsibility-Principle) which formulates **1** class for **1** function.
+
+At the beginning, there are **2** responsibilities of `Game` class:
+
+<img src="img/image-20220202100523607.png" alt="image-20220202100523607" style="zoom: 67%;" />
+
+After applied the SRP, the **2** responsibilities are **<u>separated</u>** into **2** classes:
+
+<img src="img/image-20220202100731968.png" alt="image-20220202100731968" style="zoom:67%;" />
+
+
+
+
+
 # II.Agile Design
 
 
@@ -317,9 +333,116 @@ The interplay between these 3 aspects of software development is <u>**the act of
 
 
 
+# 8.SRP: The Single-Responsibility Principle
 
 
 
+<div align="center">
+    A classs should have only one reason to change.
+</div>
+
+
+
+📌**Why is <u>IMPORTANT</u> to separate responsibilities?**
+
+- 1️⃣If a class has <u>more than</u> **1** responsibility, then there will be more than **1** reason for it to <u>**change**</u>⚠.
+- 2️⃣If a class has <u>more than</u> **1** responsibility, then the responsibilities become <u>**coupled**</u>⚠.
+
+Therefore, the coupling leads to <u>**fragile designs**</u> that break in unexpected ways when changed.
+
+
+
+📌**Coupled Design - more than 1 responsibility**
+
+<img src="img/image-20220202110953677.png" alt="image-20220202110953677" style="zoom:67%;" />
+
+
+
+The `Rectangle` above holds **2** responsibilities:
+
+- 1️⃣ it provides a mathematical model of the geometry of a rectangle. (for Computational Geometry Application)
+- 2️⃣ it renders the rectangle on a graphical user interface (for GUI)
+
+
+
+📌**Side Effect of Coupled Design**
+
+1️⃣ we must include the GUI in the computational geometry application => linked time, compile time,⚠ etc.
+
+2️⃣ one change leads to another => rebuild, retest, redeploy,⚠ etc.
+
+
+
+📌**Decoupled Design**
+
+A better design is to separate the two responsibilities into two completely different classes as the following.
+
+<img src="img/image-20220202112303117.png" alt="image-20220202112303117" style="zoom:67%;" />
+
+
+
+📌**What is a Responsibility? When should be separated?**
+
+Answer to the 1st question: it depends.
+
+Answer to the 2nd question: it also depends...
+
+
+
+Considering the following `interface` for a modem:
+
+```java
+interface Modem
+{
+    public void dial(String pno);
+    public void hangup();
+    public void send(char c);
+    public char recv();
+}
+```
+
+You probably think the definition is quite enough: the responsibility of `Modem` is the responsibility of `Modem`
+
+ But it can be sliced into the following:
+
+- Connection Management
+  - `dial`
+  - `hangup`
+- Data Communication
+  - `send`
+  - `recv`
+
+<img src="img/image-20220202114505520.png" alt="image-20220202114505520" style="zoom:67%;" />
+
+
+
+⭐In a nutshell, **<u>what</u>** and <u>**when**</u> should we do this?
+
+<div align="center">
+    An axis of change is an axis of change <strong>only if</strong> the changes actually occur.
+</div>
+
+Sooner will cause **Needless Complexity**.
+
+Later will cause **Rigidity**.
+
+
+
+📌**Compromised Separation**
+
+The `ModemImplementation` class is still a class containing **2** responsibilities. 🙊 Sometime we <u>are forced to couple things</u> that we’d rather not couple... The compromised solution is to **<u>separate interfaces of decoupled concept</u>**.
+
+
+
+📌**Persistence**
+
+Binding business rules to the persistence subsystem is <u>asking for trouble</u>🙉. Because business rules tend to change frequently..
+
+e.g.
+
+<img src="img/image-20220202120149026.png" alt="image-20220202120149026" style="zoom:67%;" />
+
+The Employee class contains business rules and persistence control. When facing with similar problems, try to use FACADE and PROXY design pattern.
 
 
 
