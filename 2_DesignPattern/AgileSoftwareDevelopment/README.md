@@ -450,7 +450,129 @@ The Employee class contains business rules and persistence control. When facing 
 
 
 
+# 9.OCP: The Open–Closed Principle
+
+
+
+<div align="center">
+    Software entities (classes, modules, functions, etc.) should be open for extension, but closed for
+modification.
+</div>
+
+
+
+📌**What is Open-Closed Principle?**
+
+Open: open for extension
+
+Closed: closed for modification
+
+
+
+📌**Example of not OCP**
+
+<img src="img/image-20220203170027372.png" alt="image-20220203170027372" style="zoom:67%;" />
+
+Because `Client` and `Server` classes are concrete.
+
+
+
+📌**Abstraction is the KEY**
+
+To follow OCP, abstraction is the key.
+
+
+
+📌**STRATEGT pattern on OCP**⭐
+
+<img src="img/image-20220203170336287.png" alt="image-20220203170336287" style="zoom:67%;" />
+
+The preceding is the diagram after applied OCP. One question left, why did we abstract `Client` as `ClientInterface` rather than `AbstractServer`?
+
+Because abstract classes are <u>**more closely associated to their clients**</u>[^4] than to the classes that implement them.
+
+
+
+📌**TEMPLATE METHOD pattern on OCP**⭐
+
+<img src="img/image-20220203175155878.png" alt="image-20220203175155878" style="zoom:67%;" />
+
+The policy functions describe some work that needs to be done in terms of some abstract interfaces. e.g. pure virtual functions in C++.
+
+
+
+📌**Bad Practice violating OCP**
+
+```c++
+typedef struct Shape *ShapePointer;
+
+void DrawAllShapes(ShapePointer list[], int n)
+{
+    int i;
+    for (i=0; i<n; i++)
+    {
+        struct Shape* s = list[i];
+        switch (s->itsType)
+        {
+            case square:
+            DrawSquare((struct Square*)s);
+            break;
+            case circle:
+            DrawCircle((struct Circle*)s);
+            break;
+        }
+    }
+}
+```
+
+In the preceding example, the `switch-case` block is violating the OCP. In the future, it requires lots of coding when modification comes in, e.g. triangle.
+
+
+
+📌**Using polymorphism for OCP**
+
+Detail code refers to [here](./codes/Cpp/draw_shape/object_oriented_design_solution/main.cpp).
+
+```c++
+class Shape
+{
+    public:
+    virtual void Draw() const = 0;
+};
+
+class Square : public Shape
+{
+    public:
+    virtual void Draw() const;
+};
+
+class Circle : public Shape
+{
+    public:
+    virtual void Draw() const;
+};
+
+void DrawAllShapes(vector<Shape*>& list)
+{
+    vector<Shape*>::iterator i;
+    for (i=list.begin(); i != list.end(); i++)
+    	(*i)->Draw();
+}
+```
+
+In the future, if I were asked to draw triangle, I can easily add a `Triangle::Shape` class <u>without touching other codes</u>.
+
+
+
+
+
+
+
+
+
 [^1]: disentangle: 解开,解耦, to separate something from the things that are twisted around it
 [^2]: viscosity: 粘性
 [^3]: It happens a lot in team programming. Ralph copied a block of codes which were copied by Lily which turns out to be created by Todd... and on and on... Therefore, the original idea of that code lost and hard to be maintained... Plus, if one got bugs and many places need to be fixed
+
+[^4]: client here means the section used them frequently. 频繁的业务逻辑
 
