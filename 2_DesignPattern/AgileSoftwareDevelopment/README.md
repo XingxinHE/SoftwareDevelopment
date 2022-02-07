@@ -479,7 +479,30 @@ Because `Client` and `Server` classes are concrete.
 
 📌**Abstraction is the KEY**
 
-To follow OCP, abstraction is the key.
+1️⃣OCP is NOT one-off[^5]. Because we meet changes, and changes will affect the abstraction for current OCP.
+
+2️⃣There is no abstraction that is natural to all contexts! (still due to changes)
+
+3️⃣Don't <u>over-"abstract"</u> the design(*Needless complexity*).But, we wait until the changes happen!
+
+4️⃣"Fool me once, shame on you. Fool me twice, shame on me." To keep from loading our software with *Needless Complexity*, we may **<u>permit ourselves to be fooled once</u>**. 
+
+5️⃣Resisting premature abstraction is as important as abstraction itself.⭐
+
+
+
+📌**Primary Mechanism behind OCP**
+
+> ​	Speak without particular programming language
+
+- abstraction
+- polymorphism
+
+> ​	Speak with particular programming language (e.g. C++)
+
+- **inheritance** = abstraction + polymorphism
+
+
 
 
 
@@ -566,6 +589,594 @@ In the future, if I were asked to draw triangle, I can easily add a `Triangle::S
 
 
 
+# 10.LSP: The Liskov Substitution Principle
+
+<div align="center">
+		SUBTYPES MUST BE SUBSTITUTABLE FOR THEIR BASE TYPES.
+</div>
+
+📌**Barbara Liskov wrote this in 1988:**
+
+If for each object $o_1$ of type $S$ there is an object $o_2$ of type $T$ such that for all programs $P$ defined in terms of $T$, the behavior of $P$ is unchanged when $o_1$ is substituted for $o_2$ then $S$ is a subtype of $T$.
+
+<img src="img/image-20220204145107917.png" alt="image-20220204145107917" style="zoom:50%;" />
+
+
+
+📌**What does LSP solve?**
+
+OCP demonstrates **inheritance** is IMPORTANT.
+
+LSP will introduce <u>**how**</u> to best use inheritance.
+
+
+
+📌**Example of a Violation of the LSP**
+
+A violation of LSP causing a violation of OCP!⚠
+
+```c++
+//A violation of LSP causing a violation of OCP.
+struct Point {double x,y;};
+struct Shape 
+{
+    enum ShapeType {square, circle} itsType;
+    Shape(ShapeType t) : itsType(t) {}
+};
+struct Circle : public Shape
+{
+    Circle() : Shape(circle) {};
+    void Draw() const;
+    Point itsCenter;
+    double itsRadius;
+};
+struct Square : public Shape
+{
+    Square() : Shape(square) {};
+    void Draw() const;
+    Point itsTopLeft;
+    double itsSide;
+};
+void DrawShape(const Shape& s)
+{
+    if (s.itsType == Shape::square)
+    	static_cast<const Square&>(s).Draw();
+    else if (s.itsType == Shape::circle)
+    	static_cast<const Circle&>(s).Draw();
+}
+```
+
+Apparently, the `DrawShape` function is trying to use LSP which takes `Shape` as an argument. But it **failed**, and it is violating LSP and thus violating OCP as well... When a new shape comes in, we have to modify the `DrawShape` once again...
+
+
+
+📌**Potential problem of LSP and its solution**
+
+> ​	Problem
+
+Since LSP asks for a `BaseClass` and `DerivedClass` relationship, a.k.a. IS-A relationship. Sometime, this kind of relationship would mislead ourself.
+
+For example,  we are known with common sense, Square is a Rectangle. Therefore, square is a subtype of rectangle.
+
+```c++
+class Rectangle
+{
+    public:
+        void SetWidth(double w) {itsWidth=w;}
+        void SetHeight(double h) {itsHeight=w;}
+        double GetHeight() const {return itsHeight;}
+        double GetWidth() const {return itsWidth;}
+    private:
+        Point itsTopLeft;
+        double itsWidth;
+        double itsHeight;
+};
+
+class Square : public Rectangle{};
+```
+
+However, `SetWidth` , `SetHeight`, `itsWidth`, and `itsHeight` are <u>**redundant**</u> information since square is 1:1 size. 
+
+> ​	Drawback
+
+- Memory **Waste**: Considering in a CAD/CAE product, millions of squares take redundant bits will cause memory waste.
+- **Confused** API: These functions are inappropriate since width and height of a square are identical.
+
+> ​	Solution
+
+The solution is obvious. We could override the `SetWidth` and `SetHeight` function.
+
+```c++
+void Square::SetWidth(double w)
+{
+	Rectangle::SetWidth(w);
+	Rectangle::SetHeight(w);
+}
+void Square::SetHeight(double h)
+{
+	Rectangle::SetHeight(h);
+	Rectangle::SetWidth(h);
+}
+```
+
+
+
+📌**Who is the boss of LSP?**
+
+The **clients**.
+
+> ​	If we see it from the creator of `Square` and `Rectangle`
+
+Everything seems pretty good so far.
+
+> ​	If we see it from others, possible clients themselves
+
+The test function will fail if we pass a `Square` inside.
+
+```c++
+void g(Rectangle& r)
+{
+	r.SetWidth(5);
+	r.SetHeight(4);
+	assert(r.Area() == 20);
+}
+```
+
+Therefore, there is nothing wrong of current design. It only smells when it encounters such situation. Therefore, the boss of LSP should only be expressed in terms of clients.
+
+
+
+📌**DBC - Design by Contract**
+
+> ​	Why DBC?
+
+Since LSP is quite unpredictable and unquantified, developers refer to **DBC** - design by contract.
+
+> ​	What is DBC?
+
+ The <u>**contract of that class is explicitly stated**</u>. 
+
+> ​	What does it state?
+
+- **precondition**, must be true in order for the method to execute.
+
+- **postcondition**, which is guaranteed to be true by method.
+
+> ​	Example
+
+precondition
+
+```c++
+// A rectangle
+Rectangle r;
+```
+
+method
+
+```c++
+Rectangle::SetWidth(double w);
+```
+
+postcondition
+
+```c++
+assert((itsWidth == w) && (itsHeight == old.itsHeight));
+```
+
+
+
+📌**DBC meets changes**
+
+> ​	Rules
+
+The precondition of <u>derived</u> class: can be stronger or normal  ($\geq$)
+
+The postcondition of <u>derived</u> class: can be weaker or normal ($\leq$)
+
+> ​	Example
+
+`Square` is derived class of `Rectangle`.
+
+The postcondition of `Rectangle` is `assert((itsWidth == w) && (itsHeight == old.itsHeight));`
+
+The postcondition of `Square` is unset right now. Therefore, it is weaker.⚠❌
+
+Therefore, it violates the LSP.
+
+
+
+📌**Example - Customized `Set`**
+
+> ​	✏Problem1
+
+A commercial 3rd party library has container classes, e.g. `Set`. The `Set` has **2** following versions:
+
+- `BoundedSet`, similar to array with fixed size memory allocation
+- `UnboundedSet`, similar to dynamic array with no limit on the amount of elements
+
+The author may **1️⃣in the future replace such class** into a more appropriate and efficient container class. 
+
+> ​	🔨Solution1
+
+Regarding the first problem, use ADAPTER method.
+
+<img src="img/image-20220205173903046.png" alt="image-20220205173903046" style="zoom:80%;" />
+
+```c++
+template <class T>
+class Set
+{
+    public:
+        virtual void Add(const T&) = 0;
+        virtual void Delete(const T&) = 0;
+        virtual bool IsMember(const T&) const = 0;
+};
+```
+
+By using the preceding interface, the client code needn't to care which set it used. They only focus on `Add`, `Delete`, etc.
+
+> ​	✏Problem 2
+
+Meanwhile, part of the 3rd party class 2️⃣**doesn't support template programming**. For example, if I want to use `PersistentSet`, I have to register `PersistentObject` first.
+
+> ​	🔨Solution2
+
+Therefore, we can take the following strategy - *delegate* the process.
+
+<img src="img/image-20220205175624340.png" alt="image-20220205175624340" style="zoom:67%;" />
+
+```c++
+void PersistentSet::Add(const T& t)
+{
+	PersistentObject& p = dynamic_cast<PersistentObject&>(t);
+	itsThirdPartyPersistentSet.Add(p);
+}
+```
+
+> ​	⚒Solution1+Solution2 = All In One
+
+It is to combine everything into a compact system.
+
+<img src="img/image-20220205212122663.png" alt="image-20220205212122663" style="zoom:67%;" />
+
+
+
+📌**Example - `Line` and `LineSegment`**
+
+The `Line` here is a mathematical line which can extend to infinity.
+
+The `LineSegment` here is a geometrical line whose length can be measured.
+
+<img src="img/image-20220205215244547.png" alt="image-20220205215244547" style="zoom:50%;" />
+
+> ​	Problem
+
+With common sense, the `LineSegment` is a derived class of `Line`.
+
+```c++
+class Line
+{
+    public:
+        Line(const Point& p1, const Point& p2);
+        double GetSlope() const;
+        double GetIntercept() const;               // pay attention to here!! Y Intercept
+        Point GetP1() const {return itsP1;};
+        Point GetP2() const {return itsP2;};
+        virtual bool IsOn(const Point&) const;     // pay attention to here!!
+    private:
+        Point itsP1;
+        Point itsP2;
+};
+
+class LineSegment : public Line
+{
+    public:
+        LineSegment(const Point& p1, const Point& p2);
+        double GetLength() const;
+        virtual bool IsOn(const Point&) const;
+};
+```
+
+The `LineSegment` is a derivative of `Line`. The `IsOn()` method is set to `virtual` and everything seems ok. But if I do this on `LineSegment` will fail⚠❌:
+
+```c++
+Assert(IsOn(Intercept()) == true);
+```
+
+<img src="img/image-20220207141307252.png" alt="image-20220207141307252" style="zoom:50%;" />
+
+Apparently, the intersection point(red🔴) of `LineSegment` may be not on itself.
+
+> ​	Solution
+
+Therefore, we could see a division here. `Line` cannot be the base class of `LineSegment`. Then the strategy shifts to segregate the `Line` into a `LinearObject` class.
+
+```c++
+//------------linearobj.h------------//
+#ifndef GEOMETRY_LINEAR_OBJECT_H
+#define GEOMETRY_LINEAR_OBJECT_H
+#include "point.h"
+
+class LinearObject
+{
+        public:
+                LinearObject(const Point& p1, const Point& p2);
+                double GetSlope() const;
+                double GetIntercept() const;
+                Point GetP1() const {return itsP1;};
+                Point GetP2() const {return itsP2;};
+                virtual int IsOn(const Point&) const = 0; // abstract. (pure virtual function is abstract)
+
+        private:
+                Point itsP1;
+                Point itsP2;
+};
+
+#endif
+
+
+//------------lineseg.h------------//
+#ifndef GEOMETRY_LINESEGMENT_H
+#define GEOMETRY_LINESEGMENT_H
+#include "point.h"
+#include "linearobj.h"
+
+class LineSegment : public LinearObject
+{
+        public:
+                LineSegment(const Point& p1, const Point& p2);
+                double GetLength() const;
+                virtual bool IsOn(const Point&) const;
+};
+
+#endif
+
+
+//------------line.h------------//
+#ifndef GEOMETRY_LINE_H
+#define GEOMETRY_LINE_H
+#include "point.h"
+#include "linearobj.h"
+
+class Line : public LinearObject
+{
+	public:
+		Line(const Point& p1, const Point& p2);
+		virtual bool IsOn(const Point&) const;
+};
+
+#endif
+```
+
+
+
+
+
+📌**Rules learned from previous example**⭐⭐⭐
+
+We can state that if a set of classes all support *a common responsibility*, **<u>they should inherit that responsibility from a common superclass</u>**. If a common superclass does not already exist, create one, and move the common responsibilities to it.
+
+
+
+📌**Heuristics and Conventions**
+
+A derivative that <u>does less than its base</u> is usually not substitutable for that base, and therefore violates the LSP. Base class should do more than derived class.
+
+
+
+📌**What is Degenerate function?**
+
+A function in Base Class while it won't be used in Derived Class.
+
+
+
+
+
+# 11.DIP: The Dependency-Inversion Principle
+
+<div align="center">
+		a. High-level modules should not depend on low-level modules. Both should depend on abstractions.<br>b. Abstractions should not depend on details. Details should depend on abstractions.
+</div>
+
+
+
+📌**Bad Example of *high depends on low***
+
+<img src="img/image-20220207145239120.png" alt="image-20220207145239120" style="zoom: 67%;" />
+
+📌**Good Example - Inversion of Ownership**
+
+By inverting dependencies, we have created a structure, which is simultaneously more flexible, durable, and mobile.
+
+<img src="img/image-20220207145431276.png" alt="image-20220207145431276" style="zoom:70%;" />
+
+
+
+
+
+📌**Example**
+
+A system such that the `Button` object controls the `Lamp` object.
+
+<img src="img/image-20220207145915200.png" alt="image-20220207145915200" style="zoom:80%;" />
+
+> ​	Problem
+
+There are several issues here need to be addressed.
+
+1️⃣The `Button` class depends **directly**🤢 on the `Lamp` class. Therefore, changes of  `Lamp` object will affect `Button` object directly.
+
+2️⃣Due to the dependency on concrete class, the `Button` can now only control `Lamp` class☹. It cannot control `Motor` class for instance.
+
+```java
+public class Button
+{
+    private Lamp itsLamp;
+    public void poll()
+    {
+        if (/*some condition*/)
+        itsLamp.turnOn();
+    }
+}
+```
+
+To conclude, **the problem is** the high-level policy of the application <u>**has not been separated**</u> from the low level implementation.
+
+> ​	Solution
+
+The solution is to **<u>find the underlying abstraction</u>**. It is the abstraction that underlies the application, the truths that do not vary when the details are changed.
+
+For example, the `Button` remains unchanged:
+
+- `Button`
+  - `MouseButton`
+  - `KeyboardButton`
+  - `EletricButton`
+
+- `ObjectLinksToButton`
+  - `Lamp`
+  - `Fan`
+  - `AirConditioning`
+
+<img src="img/image-20220207164647928.png" alt="image-20220207164647928" style="zoom:80%;" />
+
+The preceding diagram illustrates inverting the dependency on the `Lamp` object.
+
+
+
+
+
+# 12.ISP: The Interface-Segregation Principle
+
+<div align="center">
+    Clients should not be forced to depend on method that they do not use.
+</div>
+
+📌**Why should we avoid such *fat* interfaces?**
+
+With multiple inheritance, the useless method will be accumulated and turn into *fat* interfaces.
+
+
+
+📌**Example of *fat* interface**
+
+Suppose you have a door and you want to add a timer function which will automatically close the door once timeout.
+
+> ​	Basic Door
+
+```c++
+class Door
+{
+    public:
+        virtual void Lock() = 0;
+        virtual void Unlock() = 0;
+        virtual bool IsDoorOpen() = 0;
+};
+```
+
+> ​	Timer
+
+```c++
+class Timer
+{
+	public:
+		void Register(int timeout, TimerClient* client);
+};
+```
+
+> ​	Timer Client
+
+```c++
+class TimerClient
+{
+	public:
+		virtual void TimeOut() = 0;
+};
+```
+
+> ​	Design of a timer door
+
+<img src="img/image-20220207170516307.png" alt="image-20220207170516307" style="zoom:80%;" />
+
+
+
+> ​	Problem
+
+The problem is that the `Door` class now depends on `TimerClient`. But not all varieties of `Door` need timing❌😑. This violates LSP with a smell of *Needless Complexity* and *Needless Redundancy*. The `Door` has been polluted with a method not requried.
+
+
+
+📌**Solution1 - Separation through Delegation**
+
+<img src="img/image-20220207171156514.png" alt="image-20220207171156514" style="zoom:67%;" />
+
+```c++
+class TimedDoor : public Door
+{
+	public:
+		virtual void DoorTimeOut(int timeOutId);
+};
+
+class DoorTimerAdapter : public TimerClient
+{
+    public:
+        DoorTimerAdapter(TimedDoor& theDoor)
+        : itsTimedDoor(theDoor)
+        {}
+    
+        virtual void TimeOut(int timeOutId) {itsTimedDoor.DoorTimeOut(timeOutId);}
+    private:
+        TimedDoor& itsTimedDoor;
+};
+```
+
+Well, there is *1* inelegant design. That is it involves the creation of a new object every time we wish to register a time-out.
+
+
+
+📌**Solution2 - Separation through Multiple Inheritance**
+
+<img src="img/image-20220207175429588.png" alt="image-20220207175429588" style="zoom:80%;" />
+
+```C++
+class TimedDoor : public Door, public TimerClient
+{
+	public:
+		virtual void TimeOut(int timeOutId);
+};
+```
+
+
+
+📌**Conclusion**
+
+> ​	Problem
+
+Fat classes cause bizarre and harmful <u>couplings</u> between their clients. When one client forces a change on the fat
+class, <u>all the other clients are affected</u>. 
+
+> ​	Strategy
+
+Clients should only have to depend on methods that they actually call.
+
+> ​	Solutions
+
+1️⃣Breaking the interface of the fat class into many client-specific interfaces. 
+
+2️⃣Each client-specific interface declares only those functions that its particular client, or client group, invoke. 
+
+3️⃣The fat class inherit all the client-specific interfaces and implement them. 
+
+> ​	Result
+
+This breaks the dependence of the clients on methods that they don’t invoke, and it allows the clients to be independent of each other.
+
+
+
+
+
+
+
 
 
 
@@ -575,4 +1186,5 @@ In the future, if I were asked to draw triangle, I can easily add a `Triangle::S
 [^3]: It happens a lot in team programming. Ralph copied a block of codes which were copied by Lily which turns out to be created by Todd... and on and on... Therefore, the original idea of that code lost and hard to be maintained... Plus, if one got bugs and many places need to be fixed
 
 [^4]: client here means the section used them frequently. 频繁的业务逻辑
+[^5]: using OCP is not one-off，使用OCP不是一劳永逸的。
 

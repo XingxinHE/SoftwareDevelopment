@@ -31,8 +31,13 @@ int main()
 
 void DrawAllShapes(vector<Shape*>& list)
 {
-        vector<Shape*>::iterator i;
-        for (i = list.begin(); i !=list.end(); i++)
+	vector<Shape*> orderedList = list;
+	sort(orderedList.begin(),
+	     orderedList.end(),
+	     Lessp<Shape*>());
+
+        vector<Shape*>::const_iterator i;
+        for (i = orderedList.begin(); i !=orderedList.end(); i++)
         {
                 (*i) ->Draw();
         }
