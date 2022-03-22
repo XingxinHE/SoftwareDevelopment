@@ -3,6 +3,7 @@ This is the repo I learned software development. The learning path is divided in
 
 - 1️⃣Beginning Software Development
   - [The Mythical Man-Month](./0_Beginning/MythicalManMonth/README.md)                                                                             🔃████████ 100%
+  - [Clean Coder](./0_Beginning/CleanCoder/README.md)                                                                                                    🔃█████░░░60%
 - 2️⃣Practice
   - [The Practice of Programming](./1_Practice/ThePracticeOfProgramming/README.md)                                                                     🔃░░░░░░░░0%
   - [Refactoring](./1_Practice/Refactoring/README.md)                                                                                                     🔃░░░░░░░░0%
