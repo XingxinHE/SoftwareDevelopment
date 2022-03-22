@@ -179,9 +179,112 @@ Your employer’s problems are your problems. 别骂老板，别骂客户。
     Do; or do not. There is no trying. -Yoda<br>
     能就是能，不能就是不能。不要说`试试看`。 -尤达
 </div>
+**📌Dare to Say No**
+
+Professionals speak truth to the power. Professionals <u>**have the courage to say no**</u> to their managers.
 
 
 
+**📌Managers like people can say no**
+
+Professionals are expected to say no. Good managers crave those has the guts to say no.
+
+
+
+**📌Confront the Adversarial Roles**(clients or manager)
+
+If you know fully well that <u>getting something done by tomorrow is impossible</u>, then you are not doing your job if you say "OK, I'll try"❌. The only way to do your job, is to say "<u>**No, that's impossible**</u>"!🙅‍♂️
+
+
+
+**📌You are lying when you say "I'll try"**
+
+Because you are crystal clear that the mission is impossible. Saying "I'll try" does not mean you are pleasing others, but rather you are **lying**!
+
+
+
+**📌So-called "Trying"**
+
+By promising to try means you have a new plan. If you do have a new plan, you have already used it. Therefore, **there is no "new plan".** Then, what is the difference you are saying "Try"?🙅‍♂️
+
+
+
+📌**Dishonest**
+
+<u>Promising to try is fundamentally dishonest.</u> You are <u>**lying**</u>🤥. And you are probably doing it to save face and avoid a confrontation😨.
+
+
+
+**📌The Client Never Care As Much As You Do**
+
+Does it ring a bell? The client said this is quite urgent[^6]! The clients, despite their protestations, despite their apparent urgency, never care as much as you do about the project...
+
+
+
+**📌Be Honest to Yourself and Your Client, Don't be a Hero**
+
+The temptation to be a hero and "solve the problem" is huge. What we all have to realize is that saying yes to dropping our professional disciplines is the not the way to solve problem. Dropping the disciplines is the way to create problems.
+
+
+
+# 3.Saying Yes
+
+**📌What is a Commitment?**
+
+Say. Mean. Do[^7].
+
+- You *say* you'll do it.
+- You *mean* it.
+- You *actually* do it.
+
+
+
+**📌Recognize Lack of Commitment**
+
+The <u>**bad**</u>❌😨 words:
+
+- Need/Should. "Someone should make this happen." 有人应该要推动这件事。
+- Hope/Wish. "I hope to get this done tomorrow." 希望我明天能完成这个任务。
+- Let's. "Let's meet sometime." 让我们，让我们把这事做完。
+
+In preceding example, people behave as if they were <u>victims</u> of a situation instead of **<u>in control of it</u>**.
+
+
+
+**📌What does Commitment Sound Like?**
+
+The real truth is that <u>***you***</u>, *<u>**personally**</u>*, <u>***ALWAYS***</u> have something that's <u>under your control</u>. Therefore, there is always something you can <u>fully commit to doing</u>. The pattern would be:
+
+> ​	I will... by... (example: I will finish this by Tuesday.)
+
+
+
+**📌It wouldn't work because I rely on person X to get this done.**😨🤥🙅‍♂️
+
+You can **ONLY** commit to things that you have <u>***full control***</u> of. If the end goal depends on someone else, you should commit to specific actions that bring you closer to the end goal.
+
+
+
+**📌It wouldn't work because solely I just won't make it**
+
+OK. It's ok! At least you admit that you can't do it. The first priority then is to <u>**CHANGE the expectations**</u>, as soon as possible!!
+
+- the earlier you raise the flag to all stakeholders
+- you can change to a different commitment
+
+If you don't tell anyone about the potential problem as soon as possible, you are not giving anyone a chance to help you follow through on your commitment.
+
+
+
+📌A Serious Developer
+
+If you follow the preceding principles, you'll be taken as <u>**a serious developer**</u>[^8] who lives up to their word, and that's one of <u>**the best things**</u> you can hope for in our industry.
+
+
+
+**📌Responsibility to Maintain Certain Standard as a Professional**
+
+As a professional, you have to make a commitment to maintain such standard. The code needs to be tested, the code needs to be clean, the code needs to be sure not breaking the system. Even in an intense and rush situation...[^9]
 
 
 
@@ -193,4 +296,9 @@ Your employer’s problems are your problems. 别骂老板，别骂客户。
 [^3]: 尽管100%覆盖不大可能，但也要尽全力去覆盖它。Bob大叔曾用2.6万行测试代码覆盖了6万行代码
 [^4]: kata,  指的是简单的编程训练，如拆分整数的素数等。
 [^5]: domain,  在软件行业通常翻译为业务
+
+[^6]: 熟悉嘛？其实客户永远不会像你那么在乎
+[^7]: 口头上说，铭记于心，付诸行动
+[^8]: 一个严谨的开发者
+[^9]: 无论情况如何，代码必须要经过测试，代码必须要Clean！尽管你很忙，但这个是你必须遵守的准则。
 
