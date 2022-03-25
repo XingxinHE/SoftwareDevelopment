@@ -1,3 +1,6 @@
+#ifndef STATE_BASE_H
+#define STATE_BASE_H
+
 #include <string>
 
 using namespace std;
@@ -12,7 +15,7 @@ protected:
     string title;
 
 public:
-    virtual ~StateBase();
+    virtual ~StateBase() {}
 
     virtual void set_context(Context *context)
     {
@@ -23,3 +26,5 @@ public:
     virtual void Handle2() = 0;
     virtual void Report() = 0;
 };
+
+#endif

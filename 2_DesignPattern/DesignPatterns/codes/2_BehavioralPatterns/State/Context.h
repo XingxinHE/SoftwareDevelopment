@@ -1,3 +1,6 @@
+#ifndef CONTEXT_H
+#define CONTEXT_H
+
 #include <iostream>
 #include <typeinfo>
 #include "StateBase.h"
@@ -48,3 +51,5 @@ public:
         return;
     }
 };
+
+#endif
