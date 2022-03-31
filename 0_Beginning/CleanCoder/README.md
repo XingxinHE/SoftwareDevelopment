@@ -290,6 +290,72 @@ As a professional, you have to make a commitment to maintain such standard. The 
 
 
 
+# 4.Coding
+
+**📌What is the key to mastery?**
+
+Confidence and error-sense.
+
+
+
+**📌Dig out the actual need of a customer**
+
+**Most of the time**, the <u>**customer's requirements do not actually solve the customer's problems**</u>[^10]. It is up to you to see this and <u>negotiate with the customer</u> to ensure that the customer's true needs are met.
+
+
+
+**📌3AM Code**
+
+Don't Code when you are tired!! Keep this in mind! When you are coding at 3.AM, you are not a hero.
+
+
+
+**📌Readability**
+
+Your code must be readable by other programmers.
+
+
+
+**📌Worry Code**
+
+When you have something bothering you, don't try to code at that time.
+
+
+
+**📌Solution to Worry Code**
+
+Spend a dedicated block of time working on the issue that is creating the worry.
+
+
+
+**📌The Flow Zone[^11]**
+
+First of all, it is not a good state. It is the highly focused, <u>tunnel-vision state of consciousness</u> that programmers can get into while they write code. When you are in the flow zone, you <u>**might be losing the big picture**</u>!❌
+
+But it is OK when you are doing a kata.✔
+
+
+
+**📌Pair Coding to Confront Interruption**
+
+Pairing can be very helpful as a way to deal with interruptions. Your pair partner can hold the context of the problem at hand, while you deal with a phone call, or a question from a colleague.
+
+
+
+**📌TDD to Confront Interruption**
+
+The failing test can also hold the context of where you are. You can return to it after an interruption and continue to make that failing test pass.
+
+
+
+**📌Take Good Rest**
+
+
+
+
+
+
+
 
 [^1]: Hippocratic oath希波克拉底誓言
 [^2]: flex v.  时常活动关节
@@ -301,4 +367,7 @@ As a professional, you have to make a commitment to maintain such standard. The 
 [^7]: 口头上说，铭记于心，付诸行动
 [^8]: 一个严谨的开发者
 [^9]: 无论情况如何，代码必须要经过测试，代码必须要Clean！尽管你很忙，但这个是你必须遵守的准则。
+
+[^10]: 太真实了，有时候客户自己并不清楚他们的需求是什么，你需要介入并且告知他们。
+[^11]: 流态区
 
