@@ -350,7 +350,93 @@ The failing test can also hold the context of where you are. You can return to i
 
 **📌Take Good Rest**
 
+Please get enough sleep.
 
+
+
+**📌Creative Input**
+
+Creative output depends on creative input. In short, read more books no matter what they are.
+
+
+
+**📌Debugging Time**
+
+To radically reduce debugging time is by adopting the practice of Test Driven Development(TDD). As a professionalism, you should minimize your debugging time.
+
+
+
+**📌Pacing Yourself**
+
+<u>Software development is a marathon, not a sprint.</u>
+
+
+
+**📌Know When to Walk Away**
+
+<u>Can't go home till you solve this problem?</u> Yes you can! And you should! Get your ass back home! When you are tired, they go away. If you then pound your nonfunctioning brain for hour after late-night hour trying to solve a problem, you'll simply make yourself more tired.[^12]
+
+
+
+**📌Being Late**
+
+The trick to managing lateness is <u>**early detection**</u> and <u>**transparency**</u>. Don't❌ continue to tell everyone you will be on time and then let them down☹... Instead, regularly measure your progress against your goal, and come up with **3** fact-based end dates: <u>best case</u>, <u>nominal case</u>, and <u>worst case</u>.
+
+
+
+**📌Hope**
+
+The "hope" here specifically means the "fake hope". If your client/manager expect the project will be done in 10 days, while you estimate is 15 days. Don't let up and let anyone else have hope.[^13]
+
+
+
+**📌Rushing**
+
+Good Practice✔:
+
+> Say no to rushing. Hold your estimates! <u>The only way to improve the schedule is to reduce scope</u>. **Do not tempted to rush**.
+
+Bad Practice❌:
+
+> ​	Developer <u>buckles under pressure</u> and <u>agree to try to make the deadline</u>. The developer will start taking shortcuts and working extra hours in the vain hope of working a miracle. This is the recipe for disaster because it gives you, your team, and your stakeholders false hope.
+
+
+
+**📌Overtime**
+
+Don't agree to work overtime unless:
+
+- 1️⃣ you want it
+- 2️⃣ it is short term, like in 2 weeks or less
+- 3️⃣ your boss has a <u>**fall-back plan**</u> in case the overtime effort fails
+
+
+
+**📌Helping Others**
+
+As a professional <u>you are honor bound to offer that help</u> whenever it is needed.
+
+
+
+**📌Being Helped**
+
+Just as you are honor bound to offer help, you are honor bound to <u>accept help</u>.
+
+
+
+**📌Mentoring**
+
+For senior programmers:
+
+> ​	It is a matter of professional ethics to spend time taking young programmers under their wing and mentoring them.
+
+For younger programmers:
+
+> ​	Have a professional duty to seek out such mentoring from their seniors.
+
+
+
+# 5.Test Driven Development
 
 
 
@@ -370,4 +456,7 @@ The failing test can also hold the context of where you are. You can return to i
 
 [^10]: 太真实了，有时候客户自己并不清楚他们的需求是什么，你需要介入并且告知他们。
 [^11]: 流态区
+
+[^12]: 身体疲惫了，大脑无法思考了，那就应该放下手下的工作然后好好休息。
+[^13]: 要让团队和利益相关者明白这个形势，除非另有后备预案，否则不要轻易松口退步。不要让其他任何人对此抱有希望。
 
