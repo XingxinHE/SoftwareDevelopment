@@ -438,6 +438,43 @@ For younger programmers:
 
 # 5.Test Driven Development
 
+**📌Why TDD is important?**
+
+You, as a professional, MUST know all your code works. TDD can help you ensure that!
+
+
+
+**📌The <u>THREE</u> Laws of TDD**
+
+1️⃣ You are not allowed to write any custom code until you have first written a failing unit test. 在编写好失败单元测试之前，不要编写任何产品代码。
+
+2️⃣ You are not allowed to write more of a unit test than is sufficient to fail. 只要有一个单元测试失败了，就不要再写测试代码。
+
+3️⃣ You are not allowed to write more production code that is sufficient to pass the currently failing unit test. 产品代码恰好能够让当前失败的单元测试通过即可，无需多写。
+
+
+
+**📌Test code and Production code**
+
+The tests fit the production code like an antibody fits an antigen.
+
+
+
+**📌The Litany of Benefits of TDD**
+
+- <u>Certainty</u> - If those tests all pass, just ship it.
+- <u>Defect Injection Rate</u> - Reports and studies describe significant defect reduction by TDD.
+- <u>Courage</u> - You got the courage to refactor your code without any worries.
+- <u>Documentation</u> - The unit tests are documentation. For anything you need to know how to do, there will be a unit test that describes in detail.
+- <u>Design</u> - The need to test first forces you to think about good design, e.g. decoupling
+- <u>The Professional Option</u> - TDD is the professional option.
+
+
+
+
+
+
+
 
 
 
