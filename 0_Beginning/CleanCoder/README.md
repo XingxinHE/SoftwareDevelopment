@@ -475,6 +475,52 @@ The tests fit the production code like an antibody fits an antigen.
 
 
 
+# 6.Practice
+
+**📌Kata**
+
+In martial art, kata is a precise set of choreographed movements that simulates one side of combat. Robert suggests we can use different languages like Python, C++, C#, or Java to code simple exercise. We can reserve the <u>**muscle memory**</u>.
+
+
+
+**📌Broaden Your Experience**
+
+Professional programmers often suffer from a lack of diversity in the kinds of problems that they solve. <u>Employers often enforce a single language, platform and domain</u> in which their programmers must work. It is not uncommon for such programmers to find themselves unprepared for the changes that periodically sweep the industry. 
+
+
+
+# 7.Acceptance Testing
+
+**📌Communication**
+
+Professional programmers are careful to make sure that their communication with other members of the team, and the business, are accurate and healthy.
+
+
+
+**📌Premature Precision**[^15]
+
+Both business and programmers are tempted to fail into the trap of premature precision which want a precision that simply cannot be achieved, and are often willing to waste a fortune trying to attain it.
+
+
+
+**📌The Uncertainty Principle**
+
+Things appear different on paper than they do in a working system!!! 纸上谈兵无用！
+
+
+
+**📌Don't Lose the Big Picture**
+
+The more precise you make your requirements, the less relevant they become as the system is implemented.
+
+
+
+📌**What is Acceptance Test Exactly?**
+
+Acceptance tests are tests written by a collaboration of the stakeholders and the programmers in order to define when a requirement done.
+
+
+
 
 
 
@@ -496,4 +542,7 @@ The tests fit the production code like an antibody fits an antigen.
 
 [^12]: 身体疲惫了，大脑无法思考了，那就应该放下手下的工作然后好好休息。
 [^13]: 要让团队和利益相关者明白这个形势，除非另有后备预案，否则不要轻易松口退步。不要让其他任何人对此抱有希望。
+
+[^14]: a.k.a. 要时常保持对市场的敏锐，关注市场里面流通的语言，自己才不会被时代所抛弃。
+[^15]: 过早地精细化，尤其是在UI表现层
 
